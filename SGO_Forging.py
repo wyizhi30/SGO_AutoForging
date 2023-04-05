@@ -58,17 +58,24 @@ material_list = driver.find_element(By.TAG_NAME, "tbody")
 material_list = material_list.text.split("\n")
 # list ==> '泥土', '158 沒有像樣的素材時能用來充數的材料', '爐渣', '45 冶煉之後的副產品，不知道是誰隨意傾倒'
 
-while(1):     #重複直到程式錯誤，無窮迴圈，之後再訂條件
-    #==================選擇素材==================
-    for i in range(int(input("材料上限%s，請問要使用幾種素材? " %equip_args[1]))):
+#==================輸入素材及數量==================
+user_list = []
+for i in range(int(input("材料上限%s，請問要使用幾種素材? " %equip_args[1]))):
         material_input = input("請輸入第%d種素材(ex:兔皮 5) :" % (i+1))
-        material_input = material_input.split(" ")
-        for i in range(0, len(material_list), 2):
-            if(material_list[i] == material_input[0]):
-                for i in range(int(material_input[1])):
+        user_list.append(material_input.split()[0])
+        user_list.append(material_input.split()[1])
+
+#==================開始自動執行==================
+while(1):                 #重複直到程式錯誤，無窮迴圈，之後再訂條件
+    
+    #==================選取素材==================
+    for u in range(0, len(user_list), 2):
+        for m in range(0, len(material_list), 2):
+            if(material_list[m] == user_list[u]):
+                for i in range(int(user_list[u+1])):
                     driver.find_element(By.CLASS_NAME, "css-1kt2y43").click()
-                    print(material_input[0])
-        time.sleep(1)
+                    print(user_list[u])
+    time.sleep(1)
     # 增加輸入判斷
 
     #==================開始鍛造==================
