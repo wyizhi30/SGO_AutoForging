@@ -54,11 +54,9 @@ name.send_keys(input("請輸入裝備名稱:"))    #鍵盤輸入
 # name.send_key("機械煎包飛升")
 time.sleep(1)
 
-material_list = driver.find_element(By.TAG_NAME, "tbody")
-material_list = material_list.text.split("\n")
-# list ==> '泥土', '158 沒有像樣的素材時能用來充數的材料', '爐渣', '45 冶煉之後的副產品，不知道是誰隨意傾倒'
-
 #==================輸入素材及數量==================
+material_list = driver.find_elements(By.CLASS_NAME, "css-1kt2y43")    #素材列表
+
 user_list = []
 for i in range(int(input("材料上限%s，請問要使用幾種素材? " %equip_args[1]))):
         material_input = input("請輸入第%d種素材(ex:兔皮 5) :" % (i+1))
@@ -70,13 +68,13 @@ while(1):                 #重複直到程式錯誤，無窮迴圈，之後再�
     
     #==================選取素材==================
     for u in range(0, len(user_list), 2):
-        for m in range(0, len(material_list), 2):
-            if(material_list[m] == user_list[u]):
+        for m in range(len(material_list)):
+            if(material_list[m].text == user_list[u]):
                 for i in range(int(user_list[u+1])):
-                    driver.find_element(By.CLASS_NAME, "css-1kt2y43").click()
+                    material_list[m].click()
                     print(user_list[u])
     time.sleep(1)
-    # 增加輸入判斷
+    # 增加輸入判斷及庫存量判斷
 
     #==================開始鍛造==================
     start_forging = driver.find_element(By.CLASS_NAME, "chakra-button.css-9xrim4")
@@ -87,8 +85,8 @@ while(1):                 #重複直到程式錯誤，無窮迴圈，之後再�
     #==================鍛造完成==================
     move = driver.find_element(By.TAG_NAME, "body")
     move.send_keys(Keys.HOME)
-    time.sleep(int(equip_args[0]) * 60 + 10)         #7分鐘後點擊完成鍛造，更換不同武器要改時間
-    done = driver.find_element(By.CLASS_NAME, "chakra-button.css-1zb9ui")
+    time.sleep(int(equip_args[0]) * 60 + 10)         #鍛造等待時間隨武器參數變動
+    done = driver.find_element(By.CLASS_NAME, "chakra-button.css-1zb9ui")      #完成鍛造
     done.click()
     print("Done!\n-------")
     time.sleep(2)
@@ -100,3 +98,4 @@ driver.quit()
 
 
 # 有空再來加圖形化介面
+# driver.find_elements() 記得加s
